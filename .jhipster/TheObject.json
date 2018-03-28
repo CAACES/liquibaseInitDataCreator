@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "theClass",
+            "otherEntityName": "theClass",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "theAttributeObject",
+            "otherEntityName": "theAttributeObject",
+            "otherEntityRelationshipName": "theObject"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20180328072449",
+    "javadoc": "对象",
+    "entityTableName": "the_object",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false
+}

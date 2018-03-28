@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="liquibase-init-data-creator:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="liquibase-init-data-creator-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="liquibase-init-data-creator:war exploded" />
+    </root>
+  </artifact>
+</component>

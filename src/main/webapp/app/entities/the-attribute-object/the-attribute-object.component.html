@@ -1,0 +1,70 @@
+<div>
+    <h2>
+        <span>The Attribute Objects</span>
+        <button class="btn btn-primary float-right jh-create-entity create-the-attribute-object" [routerLink]="['/', { outlets: { popup: ['the-attribute-object-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span >
+            Create new The Attribute Object
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="theAttributeObjects">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Value</span></th>
+            <th><span>The Object</span></th>
+            <th><span>The Attribute</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let theAttributeObject of theAttributeObjects ;trackBy: trackId">
+                <td><a [routerLink]="['../the-attribute-object', theAttributeObject.id ]">{{theAttributeObject.id}}</a></td>
+                <td>{{theAttributeObject.value}}</td>
+                <td>
+                    <div *ngIf="theAttributeObject.theObject">
+                        <a [routerLink]="['../the-object', theAttributeObject.theObject?.id ]" >{{theAttributeObject.theObject?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="theAttributeObject.theAttribute">
+                        <a [routerLink]="['../the-attribute', theAttributeObject.theAttribute?.id ]" >{{theAttributeObject.theAttribute?.name}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../the-attribute-object', theAttributeObject.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'the-attribute-object/'+ theAttributeObject.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'the-attribute-object/'+ theAttributeObject.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

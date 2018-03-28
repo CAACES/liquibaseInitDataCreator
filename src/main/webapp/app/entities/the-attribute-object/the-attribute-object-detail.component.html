@@ -1,0 +1,38 @@
+
+<div *ngIf="theAttributeObject">
+    <h2><span>The Attribute Object</span> {{theAttributeObject.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span>Value</span></dt>
+        <dd>
+            <span>{{theAttributeObject.value}}</span>
+        </dd>
+        <dt><span>The Object</span></dt>
+        <dd>
+            <div *ngIf="theAttributeObject.theObject">
+                <a [routerLink]="['/the-object', theAttributeObject.theObject?.id]">{{theAttributeObject.theObject?.id}}</a>
+            </div>
+        </dd>
+        <dt><span>The Attribute</span></dt>
+        <dd>
+            <div *ngIf="theAttributeObject.theAttribute">
+                <a [routerLink]="['/the-attribute', theAttributeObject.theAttribute?.id]">{{theAttributeObject.theAttribute?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'the-attribute-object/'+ theAttributeObject.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span> Edit</span>
+    </button>
+</div>

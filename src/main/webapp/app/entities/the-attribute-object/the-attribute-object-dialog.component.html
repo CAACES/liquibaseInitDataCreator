@@ -1,0 +1,44 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myTheAttributeObjectLabel">Create or edit a The Attribute Object</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!theAttributeObject.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="theAttributeObject.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_value">Value</label>
+            <input type="text" class="form-control" name="value" id="field_value"
+                [(ngModel)]="theAttributeObject.value" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" for="field_theObject">The Object</label>
+            <select class="form-control" id="field_theObject" name="theObject" [(ngModel)]="theAttributeObject.theObject" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="theObjectOption.id === theAttributeObject.theObject?.id ? theAttributeObject.theObject : theObjectOption" *ngFor="let theObjectOption of theobjects; trackBy: trackTheObjectById">{{theObjectOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" for="field_theAttribute">The Attribute</label>
+            <select class="form-control" id="field_theAttribute" name="theAttribute" [(ngModel)]="theAttributeObject.theAttribute" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="theAttributeOption.id === theAttributeObject.theAttribute?.id ? theAttributeObject.theAttribute : theAttributeOption" *ngFor="let theAttributeOption of theattributes; trackBy: trackTheAttributeById">{{theAttributeOption.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

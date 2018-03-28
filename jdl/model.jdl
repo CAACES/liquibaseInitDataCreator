@@ -1,0 +1,30 @@
+/* 类 */
+entity TheClass{
+    className         String,           //类名
+    tableName         String            //表名
+}
+relationship ManyToOne {
+    TheObject{theClass} to TheClass{theObject},
+    TheAttribute{theClass} to TheClass{theAttribute}
+}
+
+/* 对象 */
+entity TheObject{
+
+}
+relationship ManyToOne {
+    TheAttributeObject{theObject} to TheObject{theAttributeObject}
+}
+
+/* 属性 */
+entity TheAttribute{
+    name                String          //属性名
+}
+
+/* 属性对象 */
+entity TheAttributeObject{
+    value               String          //属性值
+}
+relationship ManyToOne {
+    TheAttributeObject{theAttribute} to TheAttribute{theAttributeObject}
+}
