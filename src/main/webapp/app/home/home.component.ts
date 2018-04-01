@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 import { JhiAlertService } from 'ng-jhipster';
 
@@ -26,9 +26,15 @@ export class HomeComponent implements OnInit {
     theAttributeObjects : TheAttributeObject[];
     theObject : TheObject;
 
-    /*导入属性*/
+    /*输出属性*/
+    exportString : string;
+
+    /*输入属性*/
     importString : string;
     importClass : TheClass;
+
+    //模态框
+    closeResult: string;
 
     /*初始属性*/
     account: Account;
@@ -38,7 +44,8 @@ export class HomeComponent implements OnInit {
         private principal: Principal,
         private loginModalService: LoginModalService,
         private eventManager: JhiEventManager,
-        private jhiAlertService: JhiAlertService
+        private jhiAlertService: JhiAlertService,
+        private modalService: NgbModal
     ) {
         this.classes = [{}];
         this.theAttributes = [new TheAttribute(null, "属性1"), new TheAttribute(null, "属性2")];
@@ -113,12 +120,13 @@ export class HomeComponent implements OnInit {
                     data += t + ";";
             }
         }
-
-        console.log(data);
+        this.exportString = data;
+        console.log(this.exportString);
     }
 
     //输入数据
     importData() {
+        this.importString = this.importString.replace(/^\s+|\s+$/g,"");
         let importAttributeValues = [];
         let importAttributes : TheAttribute[] = [];
         this.jhiAlertService.success("输入数据↓\n" + this.importString);
@@ -140,7 +148,7 @@ export class HomeComponent implements OnInit {
             tObject.theAttributeObjects = tAttributeObjects;
             this.importClass.theObjects.push(tObject);
         }
-        console.log(this.importClass);
+        this.modalRef.close();
     }
 
     //切换编辑对象
@@ -153,6 +161,37 @@ export class HomeComponent implements OnInit {
     //测试方法
     test() {
         // console.log(this.theClass);
+    }
+
+    //输入模态框
+    importDataOpen(content) {
+        this.modalRef = this.modalService.open(content, { size: 'lg' });
+        this.modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+    }
+
+    //输出模态框
+    exportDataOpen(content) {
+        this.exportData();
+        this.modalRef = this.modalService.open(content, { size: 'lg' });
+        this.modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+    }
+
+    private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return  `with: ${reason}`;
+        }
     }
 
 

@@ -1,8 +1,8 @@
 <jhi-alert></jhi-alert>
 <div class="row">
-    <!--<div class="col-md-12">-->
     <div class="">
-        <h1 class="display-4">Liquibase初始化数据编辑器</h1>
+        <h1 class="display-4">{{theClass.className ? theClass.className : 'Class'}}</h1>
+        <!--<p class="title">{{theClass.tableName ? theClass.tableName : ''}}</p>-->
         <table class="table">
             <!--表头-->
             <thead>
@@ -39,22 +39,46 @@
         </table>
     </div>
 </div>
-<button type="button" class="btn btn-info" (click)="exportData()">输出</button>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<div class="row">
-    <h1 class="display-4">输入数据</h1>
-    <textarea class="text-input" [(ngModel)]="importString"></textarea>
-    <button type="button" class="btn btn-info" (click)="importData()">输入</button>
-</div>
+<hr>
+<button type="button" class="btn btn-lg btn-outline-primary" (click)="importDataOpen(importModal)">输入数据</button>
 <button type="button" class="btn btn-info" (click)="changeEditClass()">编辑输入对象</button>
+<button type="button" class="btn btn-info" (click)="exportDataOpen(exportModal)">输出</button>
 <!--<button type="button" class="btn btn-danger" (click)="test()">测试</button>-->
 
 
+<!-- 输入数据 -->
+<ng-template #importModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">{{importClass.className}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <input title="text" class="form-control" [(ngModel)]="importClass.className" placeholder="类名">
+        <textarea class="form-control" [(ngModel)]="importString" placeholder="内容" style="height:500px"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="importData()">输入</button>
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">关闭</button>
+    </div>
+</ng-template>
+
+<!-- 输出数据 -->
+<ng-template #exportModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">{{theClass.className}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <pre>{{exportString}}</pre>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">关闭</button>
+    </div>
+</ng-template>
 
 
 
