@@ -17,21 +17,24 @@ import {TheObject} from "../entities/the-object";
     ]
 
 })
+/*
+* 1.输出数据
+* 2.编辑输入对象
+* */
 export class HomeComponent implements OnInit {
 
     /*我的属性*/
-    classes : TheClass[];
-    theAttributes : TheAttribute[];
-    theClass : TheClass;
-    theAttributeObjects : TheAttributeObject[];
-    theObject : TheObject;
+    classes : TheClass[] = [];
+    /*当前操作对象索引*/
+    currentlyClassesIndex : number = 0;
 
     /*输出属性*/
     exportString : string;
 
     /*输入属性*/
     importString : string;
-    importClass : TheClass;
+    importClassName : string;
+    // importClass : TheClass;
 
     //模态框
     closeResult: string;
@@ -47,55 +50,81 @@ export class HomeComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private modalService: NgbModal
     ) {
-        this.classes = [{}];
-        this.theAttributes = [new TheAttribute(null, "属性1"), new TheAttribute(null, "属性2")];
-        this.theClass = new TheClass(null, "Authority", "jhi_authority", [], this.theAttributes);
-        this.theAttributeObjects = [
-            new TheAttributeObject(null, "对象1，属性1", null, this.theAttributes[0]),
-            new TheAttributeObject(null, "对象1，属性2", null, this.theAttributes[1])
-        ];
-        this.theObject = new TheObject(null, this.theClass, this.theAttributeObjects);
-        this.theAttributeObjects[0].theObject = this.theObject;
-        this.theAttributeObjects[1].theObject = this.theObject;
-        this.theClass.theObjects.push(this.theObject);
-        this.theAttributes[0].theClass = this.theClass;
-        this.theAttributes[1].theClass = this.theClass;
-
-        let t : TheObject[] = [];
-        this.importClass = new TheClass(null, "importClassName", "importTableName", t, null);
+        for (let i=0; i<1; ++i)
+            this.classes.push(this.getADemoClassObject("类"));
     }
 
+    //获取count个演示类对象
+    getADemoClassObject(className : string): TheClass{
+        let theClass : TheClass;    //类
+        let theAttributes : TheAttribute[] = [];    //类的属性
+        let theObject : TheObject;  //对象
+        let theAttributeObjects : TheAttributeObject[] = [];    //对象的属性
+
+        //创建“类的属性”对象，并赋值
+        theAttributes = [new TheAttribute(null, "属性1"), new TheAttribute(null, "属性2")];
+        //创建“类”对象，并赋值
+        theClass = new TheClass(null, className, className, [], theAttributes);
+        theAttributeObjects = [     //创建“对象的属性”对象，并赋值
+            new TheAttributeObject(null, "对象1，属性1", null, theAttributes[0]),
+            new TheAttributeObject(null, "对象1，属性2", null, theAttributes[1])
+        ];
+
+        //创建“对象”对象，并赋值
+        theObject = new TheObject(null, theClass, theAttributeObjects);
+        //给“对象的属性”对象的theObject（父类）赋值
+        theAttributeObjects[0].theObject = theObject;
+        theAttributeObjects[1].theObject = theObject;
+        //给“类的属性”theClass（父类）赋值
+        theAttributes[0].theClass = theClass;
+        theAttributes[1].theClass = theClass;
+
+        //把“对象”对象添加到“类”对象里
+        theClass.theObjects.push(theObject);
+
+        return theClass;
+    }
+
+    //添加类
+    addClass() {
+        this.classes.push(this.getADemoClassObject("新的类"));
+    }
+
+    //删除类
+    deleteClass(classesIndex) {
+        this.classes.splice(classesIndex, 1);
+    }
 
     //添加属性
-    addAttribute() {
-        let attribute : TheAttribute = new TheAttribute(null, "属性" + (this.theClass.theAttributes.length+1), this.theClass);
-        this.theClass.theAttributes.push(attribute);
-        for (let i=0; i<this.theClass.theObjects.length; ++i) {
-            this.theClass.theObjects[i].theAttributeObjects.push(new TheAttributeObject(null, "对象" + (i+1) + "，属性" + this.theClass.theAttributes.length, this.theClass.theObjects[i], attribute));
+    addAttribute(classesIndex) {
+        let attribute : TheAttribute = new TheAttribute(null, "属性" + (this.classes[classesIndex].theAttributes.length+1), this.classes[classesIndex]);
+        this.classes[classesIndex].theAttributes.push(attribute);
+        for (let i=0; i<this.classes[classesIndex].theObjects.length; ++i) {
+            this.classes[classesIndex].theObjects[i].theAttributeObjects.push(new TheAttributeObject(null, "对象" + (i+1) + "，属性" + this.classes[classesIndex].theAttributes.length, this.classes[classesIndex].theObjects[i], attribute));
         }
     }
 
     //删除属性
-    deleteAttribute(index) {
-        this.theClass.theAttributes.splice(index, 1);
-        for (let i=0; i<this.theClass.theObjects.length; ++i) {
-            this.theClass.theObjects[i].theAttributeObjects.splice(index, 1);
+    deleteAttribute(classesIndex, attributeIndex) {
+        this.classes[classesIndex].theAttributes.splice(attributeIndex, 1);
+        for (let i=0; i<this.classes[classesIndex].theObjects.length; ++i) {
+            this.classes[classesIndex].theObjects[i].theAttributeObjects.splice(attributeIndex, 1);
         }
     }
 
     //添加对象
-    addObject() {
+    addObject(classesIndex) {
         let attributeObjects = [];
-        this.theClass.theObjects.push(new TheObject(null, this.theClass, null));
-        for (let i : number=0; i<this.theClass.theAttributes.length; ++i) {
-            attributeObjects.push(new TheAttributeObject(null,"对象" + (this.theClass.theObjects.length) + "，属性" + (i+1), this.theClass.theObjects[this.theClass.theObjects.length-1], this.theClass.theAttributes[i]));
+        this.classes[classesIndex].theObjects.push(new TheObject(null, this.classes[classesIndex], null));
+        for (let i : number=0; i<this.classes[classesIndex].theAttributes.length; ++i) {
+            attributeObjects.push(new TheAttributeObject(null,"对象" + (this.classes[classesIndex].theObjects.length) + "，属性" + (i+1), this.classes[classesIndex].theObjects[this.classes[classesIndex].theObjects.length-1], this.classes[classesIndex].theAttributes[i]));
         }
-        this.theClass.theObjects[this.theClass.theObjects.length-1].theAttributeObjects = attributeObjects;
+        this.classes[classesIndex].theObjects[this.classes[classesIndex].theObjects.length-1].theAttributeObjects = attributeObjects;
     }
 
     //删除对象
-    deleteObject(index) {
-        this.theClass.theObjects.splice(index, 1);
+    deleteObject(classesIndex, objectsIndex) {
+        this.classes[classesIndex].theObjects.splice(objectsIndex, 1);
     }
 
     //输出数据
@@ -103,29 +132,32 @@ export class HomeComponent implements OnInit {
         let data : string = "";
 
         data += "id;";
-        for (let i=0; i<this.theClass.theAttributes.length; ++i) {
-            var t = this.theClass.theAttributes[i].name ? this.theClass.theAttributes[i].name : "NULL";
-            if (i === this.theClass.theAttributes.length-1)
+        for (let i=0; i<this.classes[this.currentlyClassesIndex].theAttributes.length; ++i) {
+            var t = this.classes[this.currentlyClassesIndex].theAttributes[i].name ? this.classes[this.currentlyClassesIndex].theAttributes[i].name : "NULL";
+            if (i === this.classes[this.currentlyClassesIndex].theAttributes.length-1)
                 data += t + "\n";
             else
                 data += t + ";";
         }
-        for (let i=0; i<this.theClass.theObjects.length; ++i) {
+        for (let i=0; i<this.classes[this.currentlyClassesIndex].theObjects.length; ++i) {
             data += (i+1) + ";";
-            for (let j=0; j<this.theClass.theObjects[i].theAttributeObjects.length; ++j) {
-                var t = this.theClass.theObjects[i].theAttributeObjects[j].value ? this.theClass.theObjects[i].theAttributeObjects[j].value : "NULL";
-                if (j === this.theClass.theObjects[i].theAttributeObjects.length-1)
+            for (let j=0; j<this.classes[this.currentlyClassesIndex].theObjects[i].theAttributeObjects.length; ++j) {
+                var t = this.classes[this.currentlyClassesIndex].theObjects[i].theAttributeObjects[j].value ? this.classes[this.currentlyClassesIndex].theObjects[i].theAttributeObjects[j].value : "NULL";
+                if (j === this.classes[this.currentlyClassesIndex].theObjects[i].theAttributeObjects.length-1)
                     data += t + "\n";
                 else
                     data += t + ";";
             }
         }
         this.exportString = data;
-        console.log(this.exportString);
+        // console.log(this.exportString);
     }
 
     //输入数据
     importData() {
+        let t : TheObject[] = [];
+        let importClass : TheClass = new TheClass(null,this.importClassName, null, t);
+        //清除前后空格
         this.importString = this.importString.replace(/^\s+|\s+$/g,"");
         let importAttributeValues = [];
         let importAttributes : TheAttribute[] = [];
@@ -134,11 +166,11 @@ export class HomeComponent implements OnInit {
 
         importAttributeValues = table[0].split(";");
         for (let i=0 ;i<importAttributeValues.length; ++i){
-            importAttributes.push(new TheAttribute(null, importAttributeValues[i], this.importClass, null));
+            importAttributes.push(new TheAttribute(null, importAttributeValues[i], importClass, null));
         }
-        this.importClass.theAttributes = importAttributes;
+        importClass.theAttributes = importAttributes;
         for (let i=1; i<table.length; ++i) {
-            let tObject : TheObject = new TheObject(null, this.importClass, null);
+            let tObject : TheObject = new TheObject(null, importClass, null);
             let tAttributeObjects : TheAttributeObject[] = [];
             let tAttributeObjectValues;
             tAttributeObjectValues = table[i].split(";");
@@ -146,17 +178,19 @@ export class HomeComponent implements OnInit {
                 tAttributeObjects.push(new TheAttributeObject(null, tAttributeObjectValues[j], tObject, importAttributes[j]));
             }
             tObject.theAttributeObjects = tAttributeObjects;
-            this.importClass.theObjects.push(tObject);
+            importClass.theObjects.push(tObject);
         }
+
+        this.classes.push(importClass);
         this.modalRef.close();
     }
 
-    //切换编辑对象
-    changeEditClass() {
-        this.theClass = Object.assign({}, this.importClass);
-        var t : TheObject[] = [];
-        this.importClass = new TheClass(null, "importClassName", "importTableName", t, null);
-    }
+    // //切换编辑对象
+    // changeEditClass() {
+    //     // this.initClass = Object.assign({}, this.importClass);
+    //     var t : TheObject[] = [];
+    //     this.importClass = new TheClass(null, "importClassName", "importTableName", t, null);
+    // }
 
     //测试方法
     test() {

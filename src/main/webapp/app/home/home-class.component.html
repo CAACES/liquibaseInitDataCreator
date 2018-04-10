@@ -1,0 +1,34 @@
+<table class="table">
+    <!--表头-->
+    <thead>
+    <tr>
+        <th></th>
+        <th *ngFor="let attribute of theClass.theAttributes, let i = index">
+            <div class="input-group">
+                <input type="text" class=" form-control " [(ngModel)]="attribute.name"/>
+                <button type="button" class="input-group-addon btn btn-danger btn-sm" (click)="deleteAttribute(i)"><span class="fa fa-minus"></span></button>
+            </div>
+        </th>
+        <th>
+            <button type="button" class="btn btn-success btn-sm" (click)="addAttribute()"><span class="fa fa-plus"></span></button>
+        </th>
+    </tr>
+    </thead>
+
+    <!--内容-->
+    <tbody>
+    <tr *ngFor="let object of theClass.theObjects, let i = index">
+        <td>
+            <button type="button" class="btn btn-danger btn-sm" (click)="deleteObject(i)"><span class="fa fa-minus"></span></button>
+        </td>
+        <td *ngFor="let attributeObject of object.theAttributeObjects">
+            <input type="text" class="form-control" [(ngModel)]="attributeObject.value"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button type="button" class="btn btn-success btn-sm" (click)="addObject()"><span class="fa fa-plus"></span></button>
+        </td>
+    </tr>
+    </tbody>
+</table>
