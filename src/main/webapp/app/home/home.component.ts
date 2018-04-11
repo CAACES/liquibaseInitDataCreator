@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
 
     /*我的属性*/
     classes : TheClass[] = [];
+    demoClassCount : number = 20;
     /*当前操作对象索引*/
     currentlyClassesIndex : number = 0;
 
@@ -50,11 +51,11 @@ export class HomeComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private modalService: NgbModal
     ) {
-        for (let i=0; i<1; ++i)
-            this.classes.push(this.getADemoClassObject("类"));
+        for (let i=0; i<this.demoClassCount; ++i)
+            this.classes.push(this.getADemoClassObject("类" + (i+1)));
     }
 
-    //获取count个演示类对象
+    //获取一个演示类对象
     getADemoClassObject(className : string): TheClass{
         let theClass : TheClass;    //类
         let theAttributes : TheAttribute[] = [];    //类的属性
@@ -182,15 +183,22 @@ export class HomeComponent implements OnInit {
         }
 
         this.classes.push(importClass);
+        this.clearImportData();
         this.modalRef.close();
     }
 
-    // //切换编辑对象
-    // changeEditClass() {
-    //     // this.initClass = Object.assign({}, this.importClass);
-    //     var t : TheObject[] = [];
-    //     this.importClass = new TheClass(null, "importClassName", "importTableName", t, null);
-    // }
+    //修改类
+    updateClass() {
+        this.classes[this.currentlyClassesIndex].className = this.importClassName;
+        this.clearImportData();
+        this.modalRef.close();
+    }
+
+    //清空用于输入数据的属性
+    clearImportData() {
+        this.importClassName = null;
+        this.importString = null;
+    }
 
     //测试方法
     test() {
@@ -211,6 +219,16 @@ export class HomeComponent implements OnInit {
     exportDataOpen(content) {
         this.exportData();
         this.modalRef = this.modalService.open(content, { size: 'lg' });
+        this.modalRef.result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+    }
+
+    //更新类名模态框
+    updateClassOpen(content) {
+        this.modalRef = this.modalService.open(content, { size: 'sm' });
         this.modalRef.result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
         }, (reason) => {

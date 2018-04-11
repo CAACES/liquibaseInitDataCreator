@@ -1,59 +1,69 @@
 <!--<jhi-alert></jhi-alert>-->
 <div class="row">
     <div>
-        <!--<button type="button" class="btn btn-success" (click)="addClass()"><span class="fa fa-plus"></span>添加类</button>-->
-        <!--<button type="button" class="btn btn-lg btn-outline-primary" (click)="importDataOpen(importModal)">输入数据</button>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--<div>-->
-            <button type="button" class="btn btn-default" *ngFor="let class of classes, let classesIndex = index" (click)="currentlyClassesIndex = classesIndex">{{class.className}}</button>
-            <button type="button" class="btn btn-default" (click)="addClass()"><span class="fa fa-plus"></span>添加类</button>
-            <button type="button" class="btn btn-default" (click)="importDataOpen(importModal)">输入数据</button>
-        <!--</div>-->
-        <div *ngFor="let class of classes, let classesIndex = index">
-            <h1 class="display-4"  *ngIf="classesIndex === currentlyClassesIndex">
-                {{class.className ? class.className : 'Class'}}
-                <button type="button" class="input-group-addon btn btn-danger btn-sm" (click)="deleteClass(classesIndex)">删除该类</button>
-            </h1>
-            <table class="table"  *ngIf="classesIndex === currentlyClassesIndex">
-                <!--表头-->
-                <thead>
-                <tr>
-                    <th></th>
-                    <th *ngFor="let attribute of class.theAttributes, let attributesIndex = index">
-                        <div class="input-group">
-                            <input type="text" class=" form-control " [(ngModel)]="attribute.name"/>
-                            <button type="button" class="input-group-addon btn btn-danger btn-sm"
-                                    (click)="deleteAttribute(classesIndex, attributesIndex)"><span class="fa fa-minus"></span></button>
-                        </div>
-                    </th>
-                    <th>
-                        <button type="button" class="btn btn-success btn-sm" (click)="addAttribute(classesIndex)"><span
-                            class="fa fa-plus"></span></button>
-                    </th>
-                </tr>
-                </thead>
-
-                <!--内容-->
-                <tbody>
-                <tr *ngFor="let object of class.theObjects, let objectsIndex = index">
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm" (click)="deleteObject(classesIndex, objectsIndex)"><span
-                            class="fa fa-minus"></span></button>
-                    </td>
-                    <td *ngFor="let attributeObject of object.theAttributeObjects">
-                        <input type="text" class="form-control" [(ngModel)]="attributeObject.value"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button" class="btn btn-success btn-sm" (click)="addObject(classesIndex)"><span
-                            class="fa fa-plus"></span></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="btn-group">
+            <button type="button" class="btn btn-dark" *ngFor="let class of classes, let classesIndex = index"
+                    (click)="currentlyClassesIndex = classesIndex">{{class.className}}
+            </button>
         </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-secondary" (click)="addClass()"><span class="fa fa-plus"></span>添加类
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="importDataOpen(importModal)">输入数据</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div *ngFor="let class of classes, let classesIndex = index">
+        <h1 class="display-4" *ngIf="classesIndex === currentlyClassesIndex">
+            {{class.className ? class.className : 'Class'}}
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" (click)="updateClassOpen(updataClassNameModal)">修改该类
+                </button>
+                <button type="button" class="btn btn-danger" (click)="deleteClass(classesIndex)">删除该类</button>
+            </div>
+        </h1>
+        <table class="table" *ngIf="classesIndex === currentlyClassesIndex">
+            <!--表头-->
+            <thead>
+            <tr>
+                <th></th>
+                <th *ngFor="let attribute of class.theAttributes, let attributesIndex = index">
+                    <div class="input-group">
+                        <input type="text" class=" form-control " [(ngModel)]="attribute.name"/>
+                        <button type="button" class="input-group-addon btn btn-danger btn-sm"
+                                (click)="deleteAttribute(classesIndex, attributesIndex)"><span
+                            class="fa fa-minus"></span></button>
+                    </div>
+                </th>
+                <th>
+                    <button type="button" class="btn btn-success btn-sm" (click)="addAttribute(classesIndex)"><span
+                        class="fa fa-plus"></span></button>
+                </th>
+            </tr>
+            </thead>
+
+            <!--内容-->
+            <tbody>
+            <tr *ngFor="let object of class.theObjects, let objectsIndex = index">
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm"
+                            (click)="deleteObject(classesIndex, objectsIndex)"><span
+                        class="fa fa-minus"></span></button>
+                </td>
+                <td *ngFor="let attributeObject of object.theAttributeObjects">
+                    <input type="text" class="form-control" [(ngModel)]="attributeObject.value"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm" (click)="addObject(classesIndex)"><span
+                        class="fa fa-plus"></span></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 <hr>
@@ -63,6 +73,8 @@
 <!--<button type="button" class="btn btn-danger" (click)="test()">测试</button>-->
 
 
+
+<!--modal框-->
 <!-- 输入数据 -->
 <ng-template #importModal let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -97,34 +109,23 @@
     </div>
 </ng-template>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- 输入数据 -->
+<ng-template #updataClassNameModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">{{classes[currentlyClassesIndex].className}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <input title="text" class="form-control" [(ngModel)]="importClassName" placeholder="类名">
+        <!--<textarea class="form-control" [(ngModel)]="importString" placeholder="内容" style="height:500px"></textarea>-->
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info btn-sm" (click)="updateClass()">确定</button>
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="c('Close click')">关闭</button>
+    </div>
+</ng-template>
 
 
 <!--初始化代码-->
